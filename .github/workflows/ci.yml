@@ -28,3 +28,6 @@ jobs:
       - name: Run tests
         working-directory: app
         run: npm test
+
+      - name: Build Docker image
+        run: docker build -t payment-service:${{ github.sha }} .
