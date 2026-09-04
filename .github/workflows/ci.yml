@@ -11,8 +11,9 @@ on:
 jobs:
   test:
     permissions:
-  contents: read
-  packages: write
+      contents: read
+      packages: write
+    
     runs-on: ubuntu-latest
 
     steps:
@@ -33,4 +34,14 @@ jobs:
         run: npm test
 
       - name: Build Docker image
-        run: docker build -t payment-service:${{ github.sha }} .
+        run: docker build -t ghcr.io/${{ github.repository }}:${{ github.sha }} .
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}:${{ github.sha }}
