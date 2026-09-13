@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 
 metadata:
   name: payment-service
@@ -7,6 +7,16 @@ metadata:
 
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    canary:
+      steps:
+        - setWeight: 10
+        - pause:
+            duration: 30
+        - setWeight: 50
+        - pause:
+            duration: 30
+        - setWeight: 100
 
   selector:
     matchLabels:
