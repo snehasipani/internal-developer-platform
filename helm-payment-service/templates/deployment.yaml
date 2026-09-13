@@ -9,6 +9,8 @@ spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     canary:
+      stableService: payment-service-stable
+      canaryService: payment-service-canary
       steps:
         - setWeight: 10
         - pause:
