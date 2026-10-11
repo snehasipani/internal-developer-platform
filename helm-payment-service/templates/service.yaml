@@ -3,12 +3,16 @@ kind: Service
 metadata:
   name: payment-service-stable
   namespace: payment
+  labels:
+    app: payment-service
+    monitoring: prometheus
 spec:
   type: ClusterIP
   selector:
     app: payment-service
   ports:
-    - port: 80
+    - name: metrics
+      port: 80
       targetPort: 3000
       protocol: TCP
 
@@ -18,11 +22,15 @@ kind: Service
 metadata:
   name: payment-service-canary
   namespace: payment
+  labels:
+    app: payment-service
+    monitoring: prometheus
 spec:
   type: ClusterIP
   selector:
     app: payment-service
   ports:
-    - port: 80
+    - name: metrics
+      port: 80
       targetPort: 3000
       protocol: TCP

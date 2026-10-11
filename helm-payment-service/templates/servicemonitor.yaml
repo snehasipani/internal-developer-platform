@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: payment-service
+  namespace: payment
+  labels:
+    release: kube-prometheus-stack
+spec:
+  namespaceSelector:
+    matchNames:
+      - payment
+  selector:
+    matchLabels:
+      monitoring: prometheus
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 15s
