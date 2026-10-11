@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: payment-service-error-rate
+  namespace: payment
+spec:
+  metrics:
+    - name: canary-error-rate
+      interval: 30s
+      count: 3
+      successCondition: result[0] < 0.05
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+          query: |
+            (
+              sum(rate(http_requests_total{
+                namespace="payment",
+                service="payment-service-canary",
+                status_code=~"5.."
+              }[2m]))
+              /
+              clamp_min(
+                sum(rate(http_requests_total{
+                  namespace="payment",
+                  service="payment-service-canary"
+                }[2m])),
+                1e-9
+              )
+            ) or vector(0)

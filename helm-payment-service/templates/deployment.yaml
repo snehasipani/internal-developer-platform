@@ -15,6 +15,9 @@ spec:
         - setWeight: 10
         - pause:
             duration: 30
+        - analysis:
+            templates:
+              - templateName: payment-service-error-rate
         - setWeight: 50
         - pause:
             duration: 30
